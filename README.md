@@ -7,3 +7,5 @@
 * Run the application: mvn clean spring-boot:run
 * Open your favorite browser: http://localhost:8080
 
+## Screen shot
+
