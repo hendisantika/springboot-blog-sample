@@ -1,0 +1,129 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>top page</title>
+    <meta content="text/html; charset=UTF-8" http-equiv="Content-Type"/>
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+    <script src="http://ajax.googleapis.com/ajax/libs/jqueryui/1/jquery-ui.min.js"></script>
+    <script src="http://ajax.googleapis.com/ajax/libs/jqueryui/1/i18n/jquery.ui.datepicker-ja.min.js"></script>
+    <link href="http://ajax.googleapis.com/ajax/libs/jqueryui/1/themes/redmond/jquery-ui.css" rel="stylesheet"></link>
+    <link crossorigin="anonymous" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"
+          integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u"
+          rel="stylesheet"></link>
+    <script crossorigin="anonymous" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa"
+            src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+
+
+    <style>
+    </style>
+</head>
+<body>
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-sm-2"></div>
+        <div class="col-sm-6">
+            <h1>Blog edit</h1>
+            <p th:text="${msg}"/>
+            <form class="form-group" method="post" th:action="@{/edit}" th:object="${blogForm}">
+                <div class="form-group">
+                    <input class="form-control" id="blogId" name="blogId" th:value="*{blogId}" type="hidden"/>
+                    <h4>Title</h4>
+                    <input class="form-control" id="title" name="title" th:value="*{title}" type="text"/>
+                    <div class="alert alert-danger glyphicon glyphicon-exclamation-sign" th:errors="*{title}"
+                         th:if="${#fields.hasErrors('*{title}')}">error!
+                    </div>
+                </div>
+                <div class="form-group">
+                    <h4>Content</h4>
+                    <textarea class="form-control" cols="30" id="contents" name="contents" rows="10"
+                              th:text="*{contents}"></textarea>
+                    <div class="alert alert-danger glyphicon glyphicon-exclamation-sign" th:errors="*{contents}"
+                         th:if="${#fields.hasErrors('*{contents}')}">error!
+                    </div>
+                </div>
+                <div class="form-group">
+
+                    <h4>Post Date</h4>
+                    <input class="form-control" id="postDate" name="postDate"
+                           th:value="*{postDate} ? *{#temporals.format(postDate, 'yyyy/MM/dd')} : ''" type="text"/>
+                    <div class="alert alert-danger glyphicon glyphicon-exclamation-sign" role="alert"
+                         th:errors="*{postDate}" th:if="${#fields.hasErrors('*{postDate}')}">error!
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-xs-10">
+                        <input class="btn btn-primary btn-lg" name="edit" type="submit" value="Post"/>
+                        <input class="btn btn-secondary" onclick="window.location.href='/'" type="button"
+                               value="back to index"/>
+                    </div>
+                    <div class="col-xs-2">
+                        <input class="btn btn-danger" name="delete" th:disabled="not *{blogId}" type="submit"
+                               value="Delete"/>
+                    </div>
+                </div>
+            </form>
+            <div class="row">
+                <div class="col-md-8 col-lg-8">
+                    <div class="well well-sm">
+                        <div>Please select the file to be uploaded and press the upload button.</div>
+                        <br/>
+                        <form enctype="multipart/form-data" id="data_upload_form" method="post">
+                            <div class="form-group">
+                                <label>■ File path:</label> <input id="upload_file" name="upload_file" required=""
+                                                                   type="file"/>
+                            </div>
+                            <div class="form-group">
+                                <input id="data_upload_button" type="submit" value="Upload"/>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    $(function () {
+        $("#postDate").datepicker();
+    });
+    //Main processing unit
+    $(function () {
+        // I pressed the upload button
+        $("#data_upload_form")
+            .submit(
+                function (event) {
+                    // Cancel the operation of element specification
+                    event.preventDefault();
+                    var ajaxUrl = "file/upload?";
+                    // File type
+                    ajaxUrl += "filetype="
+                        + encodeURIComponent($("#upload_file")[0].files[0].name);
+                    alert(ajaxUrl);
+                    if (window.FormData) {
+                        var formData = new FormData($(this)[0]);
+                        $.ajax({
+                            type: "POST", // HTTP communication type
+                            url: ajaxUrl, // URL to send request to
+                            dataType: "text", //Type of data returned from server
+                            data: formData, // Data to send to the server
+                            processData: false,
+                            contentType: false,
+                        }).done(function (data) { // Processing when Ajax communication succeeds
+                            alert("The upload is complete.");
+                        }).fail(
+                            function (XMLHttpRequest,
+                                      textStatus, errorThrown) { // Processing when Ajax communication fails
+                                alert("The upload failed.");
+                            });
+                    } else {
+                        alert("It is a browser that can not support uploading.");
+                    }
+                });
+    });
+</script>
+
+
+</body>
+</html>
