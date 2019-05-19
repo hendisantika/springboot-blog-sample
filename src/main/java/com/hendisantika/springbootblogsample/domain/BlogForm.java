@@ -1,5 +1,6 @@
 package com.hendisantika.springbootblogsample.domain;
 
+import lombok.Data;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.validation.constraints.NotBlank;
@@ -16,6 +17,7 @@ import java.time.LocalDate;
  * Date: 2019-05-19
  * Time: 10:53
  */
+@Data
 public class BlogForm implements Serializable {
 
     private Integer blogId;
