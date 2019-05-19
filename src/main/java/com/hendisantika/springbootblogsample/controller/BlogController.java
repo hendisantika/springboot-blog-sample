@@ -3,9 +3,13 @@ package com.hendisantika.springbootblogsample.controller;
 import com.hendisantika.springbootblogsample.domain.Blog;
 import com.hendisantika.springbootblogsample.domain.BlogForm;
 import com.hendisantika.springbootblogsample.repository.BlogRepository;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -24,6 +28,8 @@ import java.util.Optional;
  */
 @Controller
 public class BlogController {
+
+    private static Logger logger = LogManager.getLogger(BlogController.class);
 
     @Autowired
     BlogRepository blogRepository;
@@ -70,6 +76,36 @@ public class BlogController {
 
 
         blogRepository.deleteById(blogform.getBlogId());
+
+        return "redirect:/";
+
+    }
+
+    //Preservation
+    @PostMapping(value = "/edit", params = "edit")
+    public String editPost(@Validated BlogForm blogform, BindingResult bindingResult, Model model) {
+
+        if (bindingResult.hasErrors()) {
+            //In case of an error, the reservation screen remains
+
+            logger.info("It is an error");
+
+            return "edit";
+        }
+
+        logger.info("Not an error");
+
+
+        Blog blog = new Blog();
+
+        blog.setBlogId(blogform.getBlogId());
+        blog.setTitle(blogform.getTitle());
+        blog.setContents(blogform.getContents());
+        blog.setPostDate(blogform.getPostDate());
+
+        blogRepository.save(blog);
+
+        //model.addAttribute("blogForm", blogForm);
 
         return "redirect:/";
 
