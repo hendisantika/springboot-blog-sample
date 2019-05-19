@@ -9,3 +9,15 @@
 
 ## Screen shot
 
+Home Page
+
+![Home Page](img/home.png "Home Page")
+
+Add Post
+
+![Add Post](img/add.png "Add Post")
+
+List All Posts
+
+![List All Post](img/list.png "List All Post")
+
