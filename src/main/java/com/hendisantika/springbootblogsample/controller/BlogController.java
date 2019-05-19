@@ -8,6 +8,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 
 import java.time.LocalDate;
 import java.util.Optional;
@@ -60,6 +61,17 @@ public class BlogController {
         model.addAttribute("blogForm", blogForm);
 
         return "edit";
+
+    }
+
+    //Delete Data
+    @PostMapping(value = "/edit", params = "delete")
+    public String delete(Model model, BlogForm blogform) {
+
+
+        blogRepository.deleteById(blogform.getBlogId());
+
+        return "redirect:/";
 
     }
 }
