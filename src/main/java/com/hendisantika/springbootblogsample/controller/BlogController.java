@@ -15,6 +15,8 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 /**
@@ -108,6 +110,33 @@ public class BlogController {
         //model.addAttribute("blogForm", blogForm);
 
         return "redirect:/";
+
+    }
+
+    //Read Data
+    @GetMapping("/")
+    public String index(Model model) {
+
+        List<Blog> blogs = blogRepository.findAll();
+
+        List<BlogForm> blogForms = new ArrayList<>();
+
+
+        for (Blog blog : blogs) {
+
+            BlogForm blogForm = new BlogForm();
+
+            blogForm.setBlogId(blog.getBlogId());
+            blogForm.setTitle(blog.getTitle());
+            blogForm.setContents(blog.getContents());
+            blogForm.setPostDate(blog.getPostDate());
+
+            blogForms.add(blogForm);
+        }
+
+        model.addAttribute("blogForms", blogForms);
+
+        return "index";
 
     }
 }
