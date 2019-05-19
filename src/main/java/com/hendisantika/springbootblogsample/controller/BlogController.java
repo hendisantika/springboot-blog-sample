@@ -1,13 +1,16 @@
 package com.hendisantika.springbootblogsample.controller;
 
+import com.hendisantika.springbootblogsample.domain.Blog;
 import com.hendisantika.springbootblogsample.domain.BlogForm;
 import com.hendisantika.springbootblogsample.repository.BlogRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 
 import java.time.LocalDate;
+import java.util.Optional;
 
 /**
  * Created by IntelliJ IDEA.
@@ -32,6 +35,27 @@ public class BlogController {
 
         blogForm.setBlogId(0);
         blogForm.setPostDate(LocalDate.now());
+
+        model.addAttribute("blogForm", blogForm);
+
+        return "edit";
+
+    }
+
+    // Get Data
+    @GetMapping(value = "/edit/{id}")
+    public String editData(Model model, @PathVariable int id) {
+
+        Optional<Blog> blogData = blogRepository.findById(id);
+
+        Blog blog = blogData.get();
+
+        BlogForm blogForm = new BlogForm();
+
+        blogForm.setBlogId(blog.getBlogId());
+        blogForm.setTitle(blog.getTitle());
+        blogForm.setContents(blog.getContents());
+        blogForm.setPostDate(blog.getPostDate());
 
         model.addAttribute("blogForm", blogForm);
 
